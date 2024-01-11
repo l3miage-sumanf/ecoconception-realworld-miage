@@ -4,7 +4,7 @@ import { TagsService } from "../../core/services/tags.service";
 import { ArticleListConfig } from "../../core/models/article-list-config.model";
 import { AsyncPipe, NgClass, NgForOf } from "@angular/common";
 import { ArticleListComponent } from "../../shared/article-helpers/article-list.component";
-import { takeUntil, tap } from "rxjs/operators";
+import {delay, takeUntil, tap} from "rxjs/operators";
 import { Subject } from "rxjs";
 import { UserService } from "../../core/services/user.service";
 import { LetDirective } from "@rx-angular/template/let";
@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  setListTo(type: string = "", filters: Object = {}): void {
+  async setListTo(type: string = "", filters: Object = {}): Promise<void> {
     // If feed is requested but user is not authenticated, redirect to login
     if (type === "feed" && !this.isAuthenticated) {
       void this.router.navigate(["/login"]);
@@ -71,6 +71,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     // Otherwise, set the list object
-    this.listConfig = { type: type, filters: filters };
+    this.listConfig = {type: type, filters: filters};
   }
 }

@@ -10,7 +10,7 @@ import { NgIf } from "@angular/common";
 import { ListErrorsComponent } from "../../shared/list-errors.component";
 import { Errors } from "../models/errors.model";
 import { UserService } from "../services/user.service";
-import { takeUntil } from "rxjs/operators";
+import {delay, takeUntil} from "rxjs/operators";
 import { Subject } from "rxjs";
 
 interface AuthForm {
@@ -70,25 +70,26 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  submitForm(): void {
+  async submitForm(): Promise<void> {
     this.isSubmitting = true;
-    this.errors = { errors: {} };
+    this.errors = {errors: {}};
 
     let observable =
       this.authType === "login"
         ? this.userService.login(
-            this.authForm.value as { email: string; password: string }
-          )
+          this.authForm.value as { email: string; password: string }
+        )
         : this.userService.register(
-            this.authForm.value as {
-              email: string;
-              password: string;
-              username: string;
-            }
-          );
-
+          this.authForm.value as {
+            email: string;
+            password: string;
+            username: string;
+          }
+        );
     observable.pipe(takeUntil(this.destroy$)).subscribe({
-      next: () => void this.router.navigate(["/"]),
+      next: () => {
+        void this.router.navigate(["/settings"]);
+      },
       error: (err) => {
         this.errors = err;
         this.isSubmitting = false;

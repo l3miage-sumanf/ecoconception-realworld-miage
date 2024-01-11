@@ -8,6 +8,14 @@ const routes: Routes = [
   {
     path: "",
     loadComponent: () =>
+      import("./core/auth/auth.component").then((m) => m.AuthComponent),
+    canActivate: [
+      () => inject(UserService).isAuthenticated.pipe(map((isAuth) => !isAuth)),
+    ],
+  },
+  {
+    path: "home",
+    loadComponent: () =>
       import("./features/home/home.component").then((m) => m.HomeComponent),
   },
   {
