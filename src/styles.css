@@ -31,7 +31,7 @@ button {
   }
 }
 
-button, img {
+button, img, iframe {
   animation: shake 1s infinite; /* 1s de durée, infinie */
 }
 
