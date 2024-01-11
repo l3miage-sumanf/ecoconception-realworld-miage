@@ -1,3 +1,5 @@
+// Importez interval et switchMap
+
 import { Component, Input, OnDestroy } from "@angular/core";
 import { ArticlesService } from "../../core/services/articles.service";
 import { ArticleListConfig } from "../../core/models/article-list-config.model";
@@ -5,8 +7,8 @@ import { Article } from "../../core/models/article.model";
 import { ArticlePreviewComponent } from "./article-preview.component";
 import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { LoadingState } from "../../core/models/loading-state.model";
-import { Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import {interval, Subject} from "rxjs";
+import { takeUntil, switchMap } from "rxjs/operators";
 
 @Component({
   selector: "app-article-list",
@@ -34,7 +36,24 @@ export class ArticleListComponent implements OnDestroy {
     }
   }
 
-  constructor(private articlesService: ArticlesService) {}
+  constructor(private articlesService: ArticlesService) {
+    // Utilisez interval pour appeler runQuery toutes les trois secondes
+    interval(3000)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(() => this.articlesService.query(this.query))
+      )
+      .subscribe((data) => {
+        this.loading = LoadingState.LOADED;
+        this.results = data.articles;
+
+        // Utilisé de http://www.jstips.co/en/create-range-0...n-easily-using-one-line/
+        this.totalPages = Array.from(
+          new Array(Math.ceil(data.articlesCount / this.limit)),
+          (val, index) => index + 1
+        );
+      });
+  }
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -50,7 +69,7 @@ export class ArticleListComponent implements OnDestroy {
     this.loading = LoadingState.LOADING;
     this.results = [];
 
-    // Create limit and offset filter (if necessary)
+    // Créez un filtre limit et offset (si nécessaire)
     if (this.limit) {
       this.query.filters.limit = this.limit;
       this.query.filters.offset = this.limit * (this.currentPage - 1);
@@ -63,7 +82,7 @@ export class ArticleListComponent implements OnDestroy {
         this.loading = LoadingState.LOADED;
         this.results = data.articles;
 
-        // Used from http://www.jstips.co/en/create-range-0...n-easily-using-one-line/
+        // Utilisé de http://www.jstips.co/en/create-range-0...n-easily-using-one-line/
         this.totalPages = Array.from(
           new Array(Math.ceil(data.articlesCount / this.limit)),
           (val, index) => index + 1
