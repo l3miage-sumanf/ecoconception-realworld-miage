@@ -12,13 +12,27 @@ import { NgClass } from "@angular/common";
 import { ArticlesService } from "../../core/services/articles.service";
 import { UserService } from "../../core/services/user.service";
 import { Article } from "../../core/models/article.model";
+import {animate, keyframes, style, transition, trigger} from "@angular/animations";
 
 @Component({
-  selector: "app-favorite-button",
-  templateUrl: "./favorite-button.component.html",
+  selector: 'app-favorite-button',
+  templateUrl: './favorite-button.component.html',
   imports: [NgClass],
   standalone: true,
+  animations: [
+    trigger('rotate', [
+      transition('* => *', [
+        style({ transform: 'rotate(0deg)' }),
+        animate('2s linear infinite', keyframes([
+          style({ transform: 'rotate(0deg)' }),
+          style({ transform: 'rotate(180deg)' }),
+          style({ transform: 'rotate(360deg)' })
+        ]))
+      ]),
+    ]),
+  ],
 })
+
 export class FavoriteButtonComponent implements OnDestroy {
   destroy$ = new Subject<void>();
   isSubmitting = false;

@@ -6,6 +6,7 @@
     'btn-primary': article.favorited
   }"
   (click)="toggleFavorite()"
+  [@rotate]
 >
-  <i class="ion-heart"></i> <ng-content></ng-content>
+<i class="ion-heart"></i> <ng-content></ng-content>
 </button>
