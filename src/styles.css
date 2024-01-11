@@ -1,13 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
-.nav-link {
+li > a {
   cursor: pointer;
 }
 
-.tag-pill {
+li , span {
   cursor: pointer;
 }
 
-.page-link {
+button {
   cursor: pointer;
 }
 
