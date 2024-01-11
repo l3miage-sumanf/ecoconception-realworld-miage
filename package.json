@@ -27,6 +27,8 @@
     "@angular/router": "16.2.11",
     "@rx-angular/cdk": "latest",
     "@rx-angular/template": "^15.1.0",
+    "@types/howler": "^2.2.11",
+    "howler": "^2.2.4",
     "marked": "^4.2.12",
     "primeng": "^17.3.2",
     "rxjs": "^7.4.0",

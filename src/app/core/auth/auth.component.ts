@@ -12,6 +12,7 @@ import { Errors } from "../models/errors.model";
 import { UserService } from "../services/user.service";
 import {delay, takeUntil} from "rxjs/operators";
 import { Subject } from "rxjs";
+import {Howl} from 'howler';
 
 interface AuthForm {
   email: FormControl<string>;
@@ -88,6 +89,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         );
     observable.pipe(takeUntil(this.destroy$)).subscribe({
       next: () => {
+
         void this.router.navigate(["/settings"]);
       },
       error: (err) => {
